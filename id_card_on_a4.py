@@ -1,18 +1,17 @@
 from PIL import Image,ImageOps
 import numpy as np
 import cv2
-# Define the A4 paper size at 300 dpi
-A4_WIDTH = 2480
-A4_HEIGHT = 3508
 
-# Define the margin and spacing in inches, then convert to pixels
-MARGIN_INCHES = 0.2
-SPACING_INCHES = 0.1
-MARGIN = int(MARGIN_INCHES * 300)  # 0.2 inches in pixels
-SPACING = int(SPACING_INCHES * 300)  # 0.1 inches in pixels
-
-def process_image(file_path):
+def process_image(file_path,A4_WIDTH = 2480,
+    A4_HEIGHT = 3508,
+    MARGIN_INCHES = 0.2,
+    SPACING_INCHES = 0.1,
+    horizontal =2,
+    vertical=4):
     # Open the uploaded image
+    MARGIN = int(MARGIN_INCHES * 300)  # 0.2 inches in pixels
+    SPACING = int(SPACING_INCHES * 300)  # 0.1 inches in pixels
+
     with Image.open(file_path) as img:
         # Convert the image to a numpy array
         img_np = np.array(img)
@@ -41,8 +40,8 @@ def process_image(file_path):
         id_card_img = Image.fromarray(id_card)
 
         # Calculate new width and height with spacing
-        new_width = (A4_WIDTH - 2 * MARGIN - SPACING) // 2
-        new_height = (A4_HEIGHT - 2 * MARGIN - 3 * SPACING) // 4
+        new_width = (A4_WIDTH - 2 * MARGIN - SPACING) // horizontal
+        new_height = (A4_HEIGHT - 2 * MARGIN - 3 * SPACING) // vertical
 
         # Resize the ID card image to fit the new dimensions
         resized_id_card_img = ImageOps.contain(id_card_img, (new_width, new_height))
@@ -60,18 +59,3 @@ def process_image(file_path):
                 a4_image.paste(resized_id_card_img, position)
 
         return a4_image
-
-# List of image file paths
-image_files = [r"C:\Users\MAB\Downloads\CNIC_F.jpg", r"C:\Users\MAB\Downloads\CNIC_B.jpg"]  # Add your file paths here
-
-# Create a PDF file
-pdf_path = 'output.pdf'
-a4_images = []
-
-# Process each image and add it to the list
-for image_file in image_files:
-    a4_image = process_image(image_file)
-    a4_images.append(a4_image)
-
-# Save all A4 images into a single PDF file
-a4_images[0].save(pdf_path, "PDF", resolution=100.0, save_all=True, append_images=a4_images[1:])

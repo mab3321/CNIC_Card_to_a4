@@ -32,17 +32,6 @@ def remove_background(input_path, output_dir):
     # Save the image without background
     id_card_img.save(output_path, 'PNG')
     print(f"Processed: {output_path}")
+    return output_path
 
-# List of image file paths
-image_files = [
-    r"C:\Users\MAB\Downloads\CNIC_B.jpg",
-    r"C:\Users\MAB\Downloads\CNIC_F.jpg"
-    # Add other image paths here
-]
 
-# Define the directory where to save the output images
-output_directory = r"C:\Users\MAB\Downloads\Processed_Images"
-
-# Process each image in the list
-for image_path in image_files:
-    remove_background(image_path, output_directory)
